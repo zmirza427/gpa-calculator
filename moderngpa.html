@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: auto;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .subject {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            color: #333333;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4caf50;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 350px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close {
+            color: #aaaaaa;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .modal img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            font-size: 20px;
+            color: #333333;
+        }
+
+        footer {
+            text-align: center;
+            margin: 20px 0;
+            color: #555555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GPA Calculator</h1>
+        <form id="gpaForm">
+            <div class="subject">
+                <label for="marks1">Marks for Programming Fundamentals:</label>
+                <input type="number" id="marks1" class="marks">
+            </div>
+            <div class="subject">
+                <label for="marks2">Marks for Calculs (Optional):</label>
+                <input type="number" id="marks2" class="marks">
+            </div>
+            <div class="subject">
+                <label for="marks3">Marks for Applied Physics:</label>
+                <input type="number" id="marks3" class="marks">
+            </div>
+            <div class="subject">
+                <label for="marks4">Marks for English:</label>
+                <input type="number" id="marks4" class="marks">
+            </div>
+            <div class="subject">
+                <label for="marks5">Marks for ICT:</label>
+                <input type="number" id="marks5" class="marks">
+            </div>
+            <div class="subject">
+                <label for="marks6">Marks for Pak Study:</label>
+                <input type="number" id="marks6" class="marks">
+            </div>
+            <button type="button" onclick="calculateGPA()">Calculate GPA</button>
+        </form>
+    </div>
+    <footer>Designed by M Zaeem Mughal</footer>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="crownImage" src="" alt="">
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        function calculateGPA() {
+            const marksElements = document.querySelectorAll('.marks');
+            const creditHours = [4, 3, 3, 3, 3, 2];
+            let totalPoints = 0;
+            let totalCredits = 0;
+
+            for (let i = 0; i < marksElements.length; i++) {
+                const marks = parseFloat(marksElements[i].value);
+                const credits = creditHours[i];
+
+                if (!isNaN(marks) && marks !== 0) {
+                    const gpa = (marks / 80) * 4;
+                    totalPoints += gpa * credits;
+                    totalCredits += credits;
+                }
+            }
+
+            if (totalCredits === 0) {
+                alert('Please enter marks for at least one subject.');
+                return;
+            }
+
+            const overallGPA = totalPoints / totalCredits;
+            let message = `Your GPA is: ${overallGPA.toFixed(2)}`;
+
+            if (overallGPA >= 3.85) {
+                message += '\nCongratulations! You have an outstanding GPA!';
+                document.getElementById("crownImage").src = "https://img.icons8.com/color/48/000000/crown.png";
+                document.getElementById("crownImage").style.display = "block";
+            } else if (overallGPA >= 3.5) {
+                message += '\nCongratulations! You have an excellent GPA!';
+                document.getElementById("crownImage").style.display = "none";
+            } else {
+                document.getElementById("crownImage").style.display = "none";
+            }
+
+            showModal(message);
+        }
+
+        function showModal(message) {
+            const modal = document.getElementById("myModal");
+            const modalMessage = document.getElementById("modalMessage");
+            const span = document.getElementsByClassName("close")[0];
+
+            modalMessage.textContent = message;
+            modal.style.display = "flex";
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
